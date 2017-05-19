@@ -1,0 +1,12 @@
+[Unit]
+Description=TogetherJS Hub
+Requires=network.target
+After=network.target systemd-user-sessions.service
+
+[Service]
+User=www-data
+ExecStart=/usr/bin/node __FINALPATH__/hub/server.js --log /var/log/framaestro_hub/togetherjs.log --log-level=2 --port __PORT__
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,47 @@
+#!/bin/bash
+# vim:set noexpandtab:
+
+# Exit on command errors and treat unset variables as an error
+set -u
+
+source .fonctions	# Loads the generic functions usually used in the script
+source /usr/share/yunohost/helpers # Source app helpers
+
+# Get multi-instances specific variables
+app=$YNH_APP_INSTANCE_NAME
+
+domain=$(ynh_app_setting_get $app domain)
+
+# Stop togetherjs service
+if [ -e "/etc/systemd/system/togetherjs.service" ]; then
+	echo "Delete systemd script"
+	sudo systemctl stop togetherjs.service
+	sudo systemctl disable togetherjs.service
+	sudo rm "/etc/systemd/system/togetherjs.service"
+	systemctl daemon-reload
+fi
+
+# Remove monitoring service Yunohost.
+if sudo yunohost service status | grep -q togetherjs	# Test the existence of the service in Yunohost
+then
+	echo "Remove togetherjs service"
+	sudo yunohost service remove togetherjs
+fi
+
+SECURE_REMOVE '/etc/nginx/conf.d/$domain.d/$app.conf'
+
+SECURE_REMOVE '/var/log/$app/'	# Delete log
+
+REMOVE_LOGROTATE_CONF	# Delete logrotate configuration
+
+ynh_package_remove nodejs-legacy || echo "nodejs-legacy already uninstalled"
+ynh_package_remove npm || echo "npm already uninstalled"
+
+SECURE_REMOVE '/var/www/$app'	# Delete directory application
+
+REMOVE_NGINX_CONF	# Delete nginx configuration
+
+# Reload SSOwat configuration
+sudo yunohost app ssowatconf
+
+echo -e "\e[0m"	# Restore normal color

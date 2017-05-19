@@ -1,0 +1,44 @@
+{
+	"name": "Framaestro hub",
+	"id": "framaestro_hub",
+	"packaging_format": 1,
+	"requirements": {
+		"yunohost": ">= 2.4"
+	},
+	"description": {
+		"en": "Online service aggregator hub: allows you to have a real-time collaborative framaestro app (you need to install framaestro first).",
+		"fr": "Hub de l'aggrégateur de services en ligne framaestro : vous permet de collaborer en temps réel dans l'application framaestro (vous devez installer framaestro d'abord)."
+	},
+	"url": "https://github.com/mozilla/togetherjs.git",
+	"license": "MIT",
+	"maintainer": {
+		"name": "ldidry",
+		"email": "luc@framasoft.org"
+	},
+	"multi_instance": false,
+	"services": [
+		"nginx"
+	],
+	"arguments": {
+		"install" : [
+			{
+				"name": "domain",
+				"type": "domain",
+				"ask": {
+					"en": "Choose a domain for Framaestro hub. This domain can't be used for an other app.",
+					"fr": "Choisissez un domaine pour le hub Framaestro. Ce domaine ne doit pas être utilisé par une autre application."
+				},
+				"example": "hub.domain.org"
+			},
+			{
+				"name": "is_public",
+				"type": "boolean",
+				"ask": {
+					"en": "Is it a public application?",
+					"fr": "Est-ce une application publique ?"
+				},
+				"default": false
+			}
+		]
+	}
+}
