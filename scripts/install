@@ -82,8 +82,8 @@ sudo cp ../conf/togetherjs.service /etc/systemd/system/togetherjs.service
 sudo chown root: /etc/systemd/system/togetherjs.service
 sudo cp ../conf/togetherjs.sh /usr/local/bin/togetherjs.sh
 sudo chown root: /usr/local/bin/togetherjs.sh
-sudo sed -i "s@__FINALPATH__@$final_path@g" /usr/local/bin/togetherjs.sh¬
-sudo sed -i "s@__PORT__@$port@g" /usr/local/bin/togetherjs.sh¬
+sudo sed -i "s@__FINALPATH__@$final_path@g" /usr/local/bin/togetherjs.sh
+sudo sed -i "s@__PORT__@$port@g" /usr/local/bin/togetherjs.sh
 
 # Install logrotate
 sudo cp ../conf/logrotate /etc/logrotate.d/$app
