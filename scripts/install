@@ -52,8 +52,8 @@ FIND_PORT 8014
 ynh_app_setting_set $app port $port
 
 # Install dependencies
-ynh_install_nodejs stable
-ynh_use_nodejs stable
+ynh_install_nodejs 6.10.3
+ynh_use_nodejs 6.10.3
 
 # Copy files to the right place
 final_path=/var/www/$app
