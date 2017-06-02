@@ -40,6 +40,10 @@ SECURE_REMOVE '/var/www/$app'	# Delete directory application
 
 REMOVE_NGINX_CONF	# Delete nginx configuration
 
+# Remove conf from framaestro
+fm_path=$(ynh_app_setting_get 'framaestro' 'final_path')
+sudo sed -i -e "s@together = .*@//together = 'https://__TOGETHERJS__';@" $fm_path/p/config.js
+
 # Reload SSOwat configuration
 sudo yunohost app ssowatconf
 
