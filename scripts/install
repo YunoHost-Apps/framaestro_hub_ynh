@@ -54,6 +54,7 @@ ynh_app_setting_set $app port $port
 # Install dependencies
 ynh_install_nodejs 6.10.3
 ynh_use_nodejs 6.10.3
+nodejs_path=$(ynh_app_setting_get $app nodejs_path)_
 
 # Copy files to the right place
 final_path=/var/www/$app
@@ -69,6 +70,7 @@ sudo chown -R www-data: "$final_path"
 
 # Copy Nginx conf
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
+sudo cp ../conf/http_upgrade.conf /etc/nginx/conf.d/http_upgrade.conf
 
 # Change variables in nginx configuration
 if [ $is_public -eq 1 ];
@@ -82,6 +84,7 @@ sudo cp ../conf/togetherjs.service /etc/systemd/system/togetherjs.service
 sudo chown root: /etc/systemd/system/togetherjs.service
 sudo cp ../conf/togetherjs.sh /usr/local/bin/togetherjs.sh
 sudo chown root: /usr/local/bin/togetherjs.sh
+sudo sed -i "s@__NODEJS_PATH__@$nodejs_path@g" /usr/local/bin/togetherjs.sh
 sudo sed -i "s@__FINALPATH__@$final_path@g" /usr/local/bin/togetherjs.sh
 sudo sed -i "s@__PORT__@$port@g" /usr/local/bin/togetherjs.sh
 

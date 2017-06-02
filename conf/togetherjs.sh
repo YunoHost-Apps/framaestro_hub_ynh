@@ -16,8 +16,8 @@
 
 nvm_install_dir="/opt/nvm"
 ynh_use_nodejs () {
-	nodejs_path=$(ynh_app_setting_get $app nodejs_path)
-	nodejs_version=$(ynh_app_setting_get $app nodejs_version)
+	nodejs_path=__NODEJS_PATH__
+	nodejs_version=6.10.3
 
 	# And store the command to use a specific version of node. Equal to `nvm use version`
 	nodejs_use_version="source $nvm_install_dir/nvm.sh; nvm use \"$nodejs_version\""
@@ -28,55 +28,5 @@ ynh_use_nodejs () {
 	set -u
 }
 
-ynh_install_nodejs () {
-	local nodejs_version="$1"
-	local nvm_install_script="https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh"
-
-	local nvm_exec="source $nvm_install_dir/nvm.sh; nvm"
-
-	sudo mkdir -p "$nvm_install_dir"
-
-	# If nvm is not previously setup, install it
-	"$nvm_exec --version" > /dev/null 2>&1 || \
-	( cd "$nvm_install_dir"
-	echo "Installation of NVM"
-	sudo wget --no-verbose "$nvm_install_script" -O- | sudo NVM_DIR="$nvm_install_dir" bash > /dev/null)
-
-	# Install the requested version of nodejs
-	sudo su -c "$nvm_exec install \"$nodejs_version\" > /dev/null"
-
-	# Store the ID of this app and the version of node requested for it
-	echo "$YNH_APP_ID:$nodejs_version" | sudo tee --append "$nvm_install_dir/ynh_app_version"
-
-	# Get the absolute path of this version of node
-	nodejs_path="$(dirname "$(sudo su -c "$nvm_exec which \"$nodejs_version\"")")"
-
-	# Store nodejs_path and nodejs_version into the config of this app
-	ynh_app_setting_set $app nodejs_path $nodejs_path
-	ynh_app_setting_set $app nodejs_version $nodejs_version
-
-	ynh_use_nodejs
-}
-
-ynh_remove_nodejs () {
-	nodejs_version=$(ynh_app_setting_get $app nodejs_version)
-
-	# Remove the line for this app
-	sudo sed --in-place "/$YNH_APP_ID:$nodejs_version/d" "$nvm_install_dir/ynh_app_version"
-
-	# If none another app uses this version of nodejs, remove it.
-	if ! grep --quiet "$nodejs_version" "$nvm_install_dir/ynh_app_version"
-	then
-		sudo su -c "source $nvm_install_dir/nvm.sh; nvm deactivate; nvm uninstall \"$nodejs_version\" > /dev/null"
-	fi
-
-	# If none another app uses nvm, remove nvm and clean the root's bashrc file
-	if [ ! -s "$nvm_install_dir/ynh_app_version" ]
-	then
-		ynh_secure_remove "$nvm_install_dir"
-		sudo sed --in-place "/NVM_DIR/d" /root/.bashrc
-	fi
-}
-
-ynh_use_nodejs stable
+ynh_use_nodejs
 node __FINALPATH__/hub/server.js --log /var/log/framaestro_hub/togetherjs.log --log-level=2 --port __PORT__
