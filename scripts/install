@@ -70,7 +70,6 @@ sudo chown -R www-data: "$final_path"
 
 # Copy Nginx conf
 sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/$app.conf
-sudo cp ../conf/http_upgrade.conf /etc/nginx/conf.d/http_upgrade.conf
 
 # Change variables in nginx configuration
 if [ $is_public -eq 1 ];
