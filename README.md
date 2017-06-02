@@ -9,10 +9,6 @@ You **need** to install framaestro first.
 
 This application need to have a dedicated domain name: create a domain which will be used only for this app.
 
-# Warning!
-
-This is a Work In Progress! Don't use it!
-
 # TODO
 
 - [ ] upgrade script
