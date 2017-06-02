@@ -52,14 +52,15 @@ FIND_PORT 8014
 ynh_app_setting_set $app port $port
 
 # Install dependencies
-ynh_package_update
-ynh_package_install nodejs-legacy npm
+ynh_install_nodejs stable
+ynh_use_nodejs stable
 
 # Copy files to the right place
 final_path=/var/www/$app
 sudo git clone https://github.com/mozilla/togetherjs.git $final_path
 ynh_app_setting_set $app final_path $final_path
 cd $final_path
+git checkout v0.5.6
 npm install
 cd $script_dir
 
@@ -79,8 +80,10 @@ sudo sed -i "s@__PORT__@$port@g" /etc/nginx/conf.d/$domain.d/$app.conf
 # Install systemd script
 sudo cp ../conf/togetherjs.service /etc/systemd/system/togetherjs.service
 sudo chown root: /etc/systemd/system/togetherjs.service
-sudo sed -i "s@__FINALPATH__@$final_path@g" /etc/systemd/system/togetherjs.service
-sudo sed -i "s@__PORT__@$port@g" /etc/systemd/system/togetherjs.service
+sudo cp ../conf/togetherjs.sh /usr/local/bin/togetherjs.sh
+sudo chown root: /usr/local/bin/togetherjs.sh
+sudo sed -i "s@__FINALPATH__@$final_path@g" /usr/local/bin/togetherjs.sh¬
+sudo sed -i "s@__PORT__@$port@g" /usr/local/bin/togetherjs.sh¬
 
 # Install logrotate
 sudo cp ../conf/logrotate /etc/logrotate.d/$app

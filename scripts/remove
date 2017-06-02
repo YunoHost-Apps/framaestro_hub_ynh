@@ -28,14 +28,13 @@ then
 	sudo yunohost service remove togetherjs
 fi
 
+SECURE_REMOVE '/usr/local/bin/togetherjs.sh'
+
 SECURE_REMOVE '/etc/nginx/conf.d/$domain.d/$app.conf'
 
 SECURE_REMOVE '/var/log/$app/'	# Delete log
 
 REMOVE_LOGROTATE_CONF	# Delete logrotate configuration
-
-ynh_package_remove nodejs-legacy || echo "nodejs-legacy already uninstalled"
-ynh_package_remove npm || echo "npm already uninstalled"
 
 SECURE_REMOVE '/var/www/$app'	# Delete directory application
 

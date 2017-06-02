@@ -5,7 +5,7 @@ After=network.target systemd-user-sessions.service
 
 [Service]
 User=www-data
-ExecStart=/usr/bin/node __FINALPATH__/hub/server.js --log /var/log/framaestro_hub/togetherjs.log --log-level=2 --port __PORT__
+ExecStart=/usr/local/bin/togetherjs.sh
 Restart=always
 
 [Install]
